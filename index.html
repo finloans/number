@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerology Number Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            font-size: 26px;
+            font-weight: bold;
+            color: red;
+            margin-bottom: 10px;
+        }
+        .quote {
+            font-size: 18px;
+            color: limegreen;
+            margin-bottom: 20px;
+        }
+        .result-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: red;
+            margin-top: 30px;
+        }
+        .promo {
+            font-size: 16px;
+            font-weight: bold;
+            color: blue;
+            margin-top: 20px;
+        }
+        .input-field {
+            padding: 10px;
+            margin: 10px 0;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn-submit {
+            padding: 12px 25px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        @media screen and (max-width: 600px) {
+            .title {
+                font-size: 22px;
+            }
+            .quote {
+                font-size: 16px;
+            }
+            .result-title {
+                font-size: 20px;
+            }
+            .promo {
+                font-size: 14px;
+            }
+            .btn-submit {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Find Your Numerology Lucky Numbers</div>
+        <div class="quote">"Numerology helps you align with universal energies to enhance health, attract wealth, and manifest well-being through your personal numbers."</div>
+        <form id="number-form">
+            <div>
+                <input type="text" id="full-name" class="input-field" placeholder="Enter your full name" required>
+            </div>
+            <div>
+                <input type="date" id="dob" class="input-field" required>
+            </div>
+            <div>
+                <button type="button" class="btn-submit" onclick="calculateNumbers()">Find your lucky Numbers</button>
+            </div>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function calculateNumbers() {
+            const fullName = document.getElementById('full-name').value;
+            const dob = document.getElementById('dob').value;
+
+            if (!fullName || !dob) {
+                alert('Please fill out both fields');
+                return;
+            }
+
+            // Calculating numbers
+            const lifePathNumber = calculateLifePathNumber(dob);
+            const destinyNumber = calculateDestinyNumber(fullName);
+            const soulUrgeNumber = calculateSoulUrgeNumber(fullName);
+            const personalYearNumber = calculatePersonalYearNumber(dob);
+            const karmicNumbers = checkKarmicNumbers(lifePathNumber);
+
+            // Display result with analysis and recommendations
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="promo">Keeping your initial letter and numerology number as key rings serves as a constant, personal reminder of your unique energy and life purpose, helping to attract positivity, focus, and protection in your daily life.<br> 
+                <strong>For customized key rings on numerology, visit <a href="https://www.sobhasluxe.in/" target="_blank" style="color:brown; font-weight: bold;font-size:20px">sobhasluxe.in</a> and order now.</strong></div>
+
+                <div class="result-title">Your Life Path Number is: ${lifePathNumber}</div>
+                <p>${getLifePathInfo(lifePathNumber)}</p>
+                <p><strong>Analysis:</strong> ${getLifePathAnalysis(lifePathNumber)}</p>
+                <p><strong>Recommendations:</strong> ${getLifePathRecommendations(lifePathNumber)}</p>
+
+                <div class="result-title">Your Destiny Number is: ${destinyNumber}</div>
+                <p>${getDestinyInfo(destinyNumber)}</p>
+                <p><strong>Analysis:</strong> ${getDestinyAnalysis(destinyNumber)}</p>
+                <p><strong>Recommendations:</strong> ${getDestinyRecommendations(destinyNumber)}</p>
+
+                <div class="result-title">Your Soul Urge Number is: ${soulUrgeNumber}</div>
+                <p>${getSoulUrgeInfo(soulUrgeNumber)}</p>
+                <p><strong>Analysis:</strong> ${getSoulUrgeAnalysis(soulUrgeNumber)}</p>
+                <p><strong>Recommendations:</strong> ${getSoulUrgeRecommendations(soulUrgeNumber)}</p>
+
+                <div class="result-title">Your Personal Year Number is: ${personalYearNumber}</div>
+                <p>${getPersonalYearInfo(personalYearNumber)}</p>
+                <p><strong>Analysis:</strong> ${getPersonalYearAnalysis(personalYearNumber)}</p>
+                <p><strong>Recommendations:</strong> ${getPersonalYearRecommendations(personalYearNumber)}</p>
+
+                <div class="result-title">Karmic Numbers: ${karmicNumbers}</div>
+                <p>${karmicNumbers !== 'No' ? 'You have karmic lessons to learn. Focus on self-growth.' : 'You have no significant karmic lessons.'}</p>
+            `;
+        }
+
+        // Life Path Number Calculation, Info, Analysis, and Recommendations
+        function calculateLifePathNumber(dob) {
+            const numbers = dob.split('-').join('').split('');
+            const lifePathValue = numbers.reduce((acc, num) => acc + parseInt(num), 0);
+            return reduceToSingleDigit(lifePathValue);
+        }
+
+        function getLifePathInfo(number) {
+            const lifePathDescriptions = {
+                1: 'Leadership, independence, innovation.',
+                2: 'Cooperation, diplomacy, sensitivity.',
+                3: 'Creativity, communication, joy.',
+                4: 'Stability, hard work, structure.',
+                5: 'Freedom, adventure, adaptability.',
+                6: 'Responsibility, love, nurturing.',
+                7: 'Spirituality, wisdom, introspection.',
+                8: 'Power, material success, ambition.',
+                9: 'Humanitarianism, idealism, selflessness.',
+                11: 'Spiritual insight, illumination.',
+                22: 'Master builder, large-scale achievement.',
+                33: 'Spiritual teacher, unconditional love and service.'
+            };
+            return lifePathDescriptions[number];
+        }
+
+        function getLifePathAnalysis(number) {
+            const lifePathAnalysis = {
+                1: 'You are a natural leader, determined to succeed in any endeavor you pursue. You face challenges when dealing with authority.',
+                2: 'You thrive in relationships and team settings. Sometimes, you can be overly sensitive or indecisive.',
+                3: 'You are a communicator and a creator, but you may struggle with discipline and focus.',
+                4: 'You bring stability and structure, but your rigid thinking can sometimes lead to frustration.',
+                5: 'You crave freedom and exploration. Be mindful of recklessness or inconsistency.',
+                6: 'You are nurturing and responsible but may face issues of over-responsibility or self-sacrifice.',
+                7: 'You seek spiritual understanding and deeper meaning in life, but sometimes you may become withdrawn.',
+                8: 'You aim for material success and authority but may face challenges with work-life balance.',
+                9: 'You are an idealist who desires to improve the world, but you may struggle with boundaries.',
+                11: 'You possess spiritual insight but may struggle with nervous tension and self-doubt.',
+                22: 'You are destined to accomplish great things, but balancing the pressure can be difficult.',
+                33: 'You are a spiritual teacher and selfless server, but setting boundaries is key to avoiding burnout.'
+            };
+            return lifePathAnalysis[number];
+        }
+
+        function getLifePathRecommendations(number) {
+            const lifePathRecommendations = {
+                1: 'Embrace leadership roles, but remember to practice patience with others.',
+                2: 'Focus on developing diplomacy and avoid taking things too personally.',
+                3: 'Channel your creativity into productive outlets and work on building discipline.',
+                4: 'Be open to flexibility and avoid overworking yourself.',
+                5: 'Seek adventure, but maintain a sense of responsibility and commitment.',
+                6: 'Nurture your relationships, but set healthy boundaries to avoid burnout.',
+                7: 'Pursue spiritual growth, but stay connected with loved ones to avoid isolation.',
+                8: 'Focus on achieving your goals, but ensure you maintain balance in personal life.',
+                9: 'Keep working toward your ideals, but remember to protect your emotional energy.',
+                11: 'Trust your intuition and embrace your spiritual calling, but manage stress carefully.',
+                22: 'Work towards your ambitious goals while pacing yourself to avoid overwhelm.',
+                33: 'Continue helping others but practice self-care to prevent exhaustion.'
+            };
+            return lifePathRecommendations[number];
+        }
+
+        // Destiny Number Calculation, Info, Analysis, and Recommendations
+        function calculateDestinyNumber(name) {
+            const nameValue = name.toUpperCase().split('').reduce((acc, char) => {
+                const charValue = char.charCodeAt(0) - 64; // A=1, B=2, C=3, etc.
+                return acc + (charValue > 0 && charValue <= 26 ? charValue : 0);
+            }, 0);
+            return reduceToSingleDigit(nameValue);
+        }
+
+        function getDestinyInfo(number) {
+            const destinyDescriptions = {
+                1: 'Born leader, independent, trailblazer.',
+                2: 'Diplomat, peacemaker, cooperative.',
+                3: 'Creative, expressive, artistic.',
+                4: 'Organized, practical, hardworking.',
+                5: 'Adventurous, adaptable, versatile.',
+                6: 'Responsible, compassionate, caring.',
+                7: 'Deep thinker, spiritual seeker.',
+                8: 'Ambitious, financially savvy, authoritative.',
+                9: 'Humanitarian, compassionate, wise.',
+                11: 'Intuition, enlightenment, spiritual insight.',
+                22: 'Master builder, high achievement, large-scale vision.',
+                33: 'Master teacher, compassion, spiritual upliftment.'
+            };
+            return destinyDescriptions[number];
+        }
+
+        function getDestinyAnalysis(number) {
+            // Analysis based on the Destiny Number
+            const destinyAnalysis = {
+                1: 'You are destined to take charge and lead others, but be mindful of coming off too dominant.',
+                2: 'Your path involves bringing people together, but avoid being too passive in your approach.',
+                3: 'Your creative expression is your strength, but avoid scattering your energies.',
+                4: 'You excel at creating systems and structures, but try not to be overly rigid.',
+                5: 'Your versatility allows you to thrive in changing environments, but beware of spreading yourself too thin.',
+                6: 'Your destiny involves care and service to others, but remember to care for yourself as well.',
+                7: 'Your path is one of introspection and seeking wisdom, but avoid becoming too isolated.',
+                8: 'You are destined for material success, but watch for a workaholic mindset.',
+                9: 'Your path involves helping others on a large scale, but remember to protect your own energy.',
+                11: 'You have a powerful spiritual destiny, but it may come with periods of doubt and uncertainty.',
+                22: 'Your destiny is to create something monumental, but ensure you balance ambition with self-care.',
+                33: 'Your destiny involves teaching and healing others, but avoid self-sacrifice.'
+            };
+            return destinyAnalysis[number];
+        }
+
+        function getDestinyRecommendations(number) {
+            const destinyRecommendations = {
+                1: 'Embrace leadership, but practice humility.',
+                2: 'Cultivate patience and balance in your relationships.',
+                3: 'Focus your creativity on projects that bring long-term fulfillment.',
+                4: 'Continue to build and organize, but stay flexible.',
+                5: 'Pursue your passions, but maintain a sense of commitment and responsibility.',
+                6: 'Help others, but don’t neglect your own well-being.',
+                7: 'Seek wisdom and understanding, but remain open to companionship.',
+                8: 'Strive for success, but ensure a work-life balance.',
+                9: 'Continue your humanitarian efforts, but establish healthy boundaries.',
+                11: 'Follow your spiritual calling, but manage stress and nervous energy carefully.',
+                22: 'Work on your large-scale goals, but pace yourself to avoid burnout.',
+                33: 'Inspire and uplift others, but remember to set boundaries for self-care.'
+            };
+            return destinyRecommendations[number];
+        }
+
+        // Soul Urge Number Calculation, Info, Analysis, and Recommendations
+        function calculateSoulUrgeNumber(name) {
+            const vowels = ['A', 'E', 'I', 'O', 'U'];
+            const soulUrgeValue = name.toUpperCase().split('').reduce((acc, char) => {
+                if (vowels.includes(char)) {
+                    const charValue = char.charCodeAt(0) - 64;
+                    return acc + charValue;
+                }
+                return acc;
+            }, 0);
+            return reduceToSingleDigit(soulUrgeValue);
+        }
+
+        function getSoulUrgeInfo(number) {
+            const soulUrgeDescriptions = {
+                1: 'Desire to lead, be independent, and achieve recognition.',
+                2: 'Desire for peace, harmony, and connection with others.',
+                3: 'Desire for creative self-expression and joy.',
+                4: 'Desire for security, stability, and accomplishment through hard work.',
+                5: 'Desire for freedom, adventure, and variety.',
+                6: 'Desire for love, family, and nurturing relationships.',
+                7: 'Desire for knowledge, spiritual growth, and introspection.',
+                8: 'Desire for power, success, and material abundance.',
+                9: 'Desire to serve others, humanitarian ideals, and selflessness.'
+            };
+            return soulUrgeDescriptions[number];
+        }
+
+        function getSoulUrgeAnalysis(number) {
+            const soulUrgeAnalysis = {
+                1: 'You are driven by a need for independence and recognition, but may struggle with authority.',
+                2: 'You are motivated by peace and cooperation, but can sometimes be overly sensitive.',
+                3: 'Your desire for creative expression drives you, but you may lack focus.',
+                4: 'You seek security through hard work, but can become too rigid at times.',
+                5: 'You crave freedom and new experiences, but may struggle with commitment.',
+                6: 'You are motivated by love and family, but can overextend yourself.',
+                7: 'You are driven by a need for spiritual understanding, but may isolate yourself.',
+                8: 'You desire material success and power, but may overlook personal relationships.',
+                9: 'You are driven by humanitarian ideals, but need to balance helping others with self-care.'
+            };
+            return soulUrgeAnalysis[number];
+        }
+
+        function getSoulUrgeRecommendations(number) {
+            const soulUrgeRecommendations = {
+                1: 'Pursue your need for leadership, but remain open to others’ ideas.',
+                2: 'Focus on building harmonious relationships, but set boundaries when necessary.',
+                3: 'Channel your creativity into projects that bring lasting fulfillment.',
+                4: 'Work towards stability, but allow flexibility in your plans.',
+                5: 'Embrace change, but commit to projects that matter.',
+                6: 'Nurture your relationships, but don’t neglect your own needs.',
+                7: 'Seek spiritual wisdom, but stay connected to the physical world.',
+                8: 'Strive for material success, but invest in personal relationships.',
+                9: 'Continue to help others, but practice self-care to avoid burnout.'
+            };
+            return soulUrgeRecommendations[number];
+        }
+
+        // Personal Year Number Calculation, Info, Analysis, and Recommendations
+        function calculatePersonalYearNumber(dob) {
+            const currentYear = new Date().getFullYear();
+            const birthDayAndMonth = dob.split('-').slice(1).join(''); // Extract month and day
+            const total = currentYear + parseInt(birthDayAndMonth);
+            return reduceToSingleDigit(total);
+        }
+
+        function getPersonalYearInfo(number) {
+            const personalYearDescriptions = {
+                1: 'New beginnings, independence, opportunities.',
+                2: 'Relationships, patience, cooperation, balance.',
+                3: 'Creativity, self-expression, fun, social interactions.',
+                4: 'Hard work, building foundations, discipline.',
+                5: 'Change, freedom, adventure, and dynamic growth.',
+                6: 'Focus on family, responsibility, love, and harmony.',
+                7: 'Introspection, spiritual growth, study, and analysis.',
+                8: 'Power, financial growth, achievement, and success.',
+                9: 'Completion, letting go, endings, and preparation for new beginnings.'
+            };
+            return personalYearDescriptions[number];
+        }
+
+        function getPersonalYearAnalysis(number) {
+            const personalYearAnalysis = {
+                1: 'This is a year of new beginnings for you, but avoid rushing into things.',
+                2: 'Focus on building relationships and partnerships, but be patient with others.',
+                3: 'This is a creative year for you, but balance fun with productivity.',
+                4: 'You need to work hard and build a strong foundation, but avoid burning out.',
+                5: 'This is a year of change and growth, but don’t get carried away by distractions.',
+                6: 'Focus on family and responsibility, but remember to take care of yourself.',
+                7: 'This is a time for introspection, but don’t withdraw too much from the world.',
+                8: 'This is a year of achievement and success, but manage your resources wisely.',
+                9: 'This is a year of endings and letting go, but look forward to new opportunities.'
+            };
+            return personalYearAnalysis[number];
+        }
+
+        function getPersonalYearRecommendations(number) {
+            const personalYearRecommendations = {
+                1: 'Embrace new opportunities, but be cautious of impulsive decisions.',
+                2: 'Focus on building harmonious relationships, but practice patience.',
+                3: 'Channel your creativity into long-term projects, but enjoy the process.',
+                4: 'Work diligently, but take time for rest to avoid burnout.',
+                5: 'Embrace change, but stay grounded in your priorities.',
+                6: 'Care for family and relationships, but set boundaries to avoid overwhelm.',
+                7: 'Use this time for spiritual growth, but don’t isolate yourself from others.',
+                8: 'Strive for success, but manage your finances and resources wisely.',
+                9: 'Embrace the closure of chapters and prepare for new beginnings with positivity.'
+            };
+            return personalYearRecommendations[number];
+        }
+
+        // Karmic Number Check
+        function checkKarmicNumbers(number) {
+            const karmicNumbers = [13, 14, 16, 19];
+            return karmicNumbers.includes(number) ? `Yes (Karmic Number ${number})` : 'No';
+        }
+
+        // Reduce to Single Digit or Master Numbers
+        function reduceToSingleDigit(number) {
+            while (number > 9 && ![11, 22, 33].includes(number)) {
+                number = number.toString().split('').reduce((acc, num) => acc + parseInt(num), 0);
+            }
+            return number;
+        }
+    </script>
+</body>
+</html>
+
